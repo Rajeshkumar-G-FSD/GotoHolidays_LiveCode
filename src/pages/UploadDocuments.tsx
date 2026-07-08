@@ -177,7 +177,7 @@ export default function UploadDocuments() {
                   )}
 
                   <button 
-                    onClick={() => setFiles([]).then(() => setSubmitted(true))}
+                    onClick={() => { setFiles([]); setSubmitted(true); }}
                     disabled={files.length === 0}
                     className="w-full bg-[#990011] text-white py-6 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-[#990011]/20 disabled:grayscale disabled:opacity-50 disabled:cursor-not-allowed group"
                   >

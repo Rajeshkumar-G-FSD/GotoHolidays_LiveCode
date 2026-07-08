@@ -3,13 +3,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Search, Binoculars, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const countries = [
-  { name: 'Maldives', flag: '🇲🇻' },
-  { name: 'Dubai', flag: '🇦🇪' },
-  { name: 'Thailand', flag: '🇹🇭' },
-  { name: 'Malaysia', flag: '🇲🇾' },
-  { name: 'Andaman', flag: '🇮🇳' },
-  { name: 'Singapore', flag: '🇸🇬' },
-  { name: 'Lakshadweep', flag: '🇮🇳' },
+  { name: 'USA', flag: '🇺🇸' },
+  { name: 'Canada', flag: '🇨🇦' },
+  { name: 'UK', flag: '🇬🇧' },
+  { name: 'Schengen', flag: '🇪🇺' },
+  { name: 'Australia', flag: '🇦🇺' },
+  { name: 'New Zealand', flag: '🇳🇿' },
 ];
 
 const purposes = [

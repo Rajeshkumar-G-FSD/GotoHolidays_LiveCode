@@ -5,27 +5,21 @@ import { ArrowUpRight, ClipboardCheck, FileSignature, Mail, MapPin, Phone, Refre
 import VisaSearchBar from '../components/VisaSearchBar';
 
 const visaDestinations = [
-  { name: 'Maldives', slug: 'maldives', desc: 'Paradise Island Getaway.', image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&auto=format&fit=crop', large: true, flag: '🇲🇻' },
-  { name: 'Dubai', slug: 'dubai', desc: 'City of Gold & Luxury.', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&auto=format&fit=crop', flag: '🇦🇪' },
-  { name: 'Thailand', slug: 'thailand', desc: 'Land of Smiles.', image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&auto=format&fit=crop', flag: '🇹🇭' },
-  { name: 'Malaysia', slug: 'malaysia', desc: 'Truly Asia.', image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&auto=format&fit=crop', flag: '🇲🇾' },
-  { name: 'Andaman', slug: 'andaman', desc: 'Emerald Islands.', image: 'https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=800&auto=format&fit=crop', flag: '🇮🇳' },
-  { name: 'Singapore', slug: 'singapore', desc: 'E-Visa Experts.', image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&auto=format&fit=crop', flag: '🇸🇬' },
-  { name: 'Lakshadweep', slug: 'lakshadweep', desc: 'Coral Island Paradise.', image: 'https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=800&auto=format&fit=crop', flag: '🇮🇳' },
-  { name: 'Australia', slug: 'australia', desc: 'Land Down Under.', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=800&auto=format&fit=crop', flag: '🇦🇺' },
-  { name: 'USA', slug: 'usa', desc: 'Land of Opportunities.', image: 'https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=800&auto=format&fit=crop', flag: '🇺🇸' },
+  { name: 'USA', slug: 'usa', desc: 'Land of Opportunities.', image: 'https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=800&auto=format&fit=crop', large: true, flag: '🇺🇸' },
+  { name: 'Canada', slug: 'canada', desc: 'True North Strong & Free.', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop', flag: '🇨🇦' },
   { name: 'UK', slug: 'uk', desc: 'Royal Kingdom.', image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&auto=format&fit=crop', flag: '🇬🇧' },
   { name: 'Schengen', slug: 'schengen', desc: 'Explore All of Europe.', image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&auto=format&fit=crop', flag: '🇪🇺' },
+  { name: 'Australia', slug: 'australia', desc: 'Land Down Under.', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=800&auto=format&fit=crop', flag: '🇦🇺' },
+  { name: 'New Zealand', slug: 'newzealand', desc: 'Adventure in Paradise.', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop', flag: '🇳🇿' },
 ];
 
 const supportedCountries = [
-  { name: 'Maldives', flag: '🇲🇻' },
-  { name: 'Dubai', flag: '🇦🇪' },
-  { name: 'Thailand', flag: '🇹🇭' },
-  { name: 'Malaysia', flag: '🇲🇾' },
-  { name: 'Andaman', flag: '🇮🇳' },
-  { name: 'Singapore', flag: '🇸🇬', slug: 'singapore' },
-  { name: 'Lakshadweep', flag: '🇮🇳' },
+  { name: 'USA', flag: '🇺🇸', slug: 'usa' },
+  { name: 'Canada', flag: '🇨🇦', slug: 'canada' },
+  { name: 'UK', flag: '🇬🇧', slug: 'uk' },
+  { name: 'Schengen', flag: '🇪🇺', slug: 'schengen' },
+  { name: 'Australia', flag: '🇦🇺', slug: 'australia' },
+  { name: 'New Zealand', flag: '🇳🇿', slug: 'newzealand' },
 ];
 
 const protocol = [
@@ -66,6 +60,11 @@ export default function Visa() {
             <h1 className="font-display text-5xl md:text-8xl text-on-surface mb-8 tracking-tighter">Effortless Borders. <br /><span className="text-primary italic">Boundless Travel.</span></h1>
           </div>
           <VisaSearchBar onApply={(data) => {
+            const selected = supportedCountries.find(country => data.country.trim().endsWith(country.name));
+            if (selected?.slug) {
+              navigate(`/visa/${selected.slug}`, { state: { instantReveal: true } });
+              return;
+            }
             navigate(`/visa-application?country=${encodeURIComponent(data.country)}`);
           }} />
         </div>
