@@ -7,6 +7,8 @@ import {
   Landmark, BookOpen, FileBadge, Building2, Mail, FileCheck2,
   FileText, Image as ImageIcon, Receipt, ClipboardList, Plane, ShieldCheck,
   FileSignature, CalendarClock, Fingerprint, PackageCheck,
+  CreditCard, Stamp, Heart, FileX, FileMinus, Globe, XCircle, Route, GraduationCap,
+  ScrollText, TrendingUp, Home,
 } from 'lucide-react';
 import USAVisaSection from '../components/visa/USAVisaSection';
 import LoadingOverlay from '../components/visa/LoadingOverlay';
@@ -51,8 +53,8 @@ const stepIcons: ReactNode[] = [
   <PackageCheck size={18} className="text-indigo-600" />,
 ];
 
-function buildSteps(country: string): TimelineStepData[] {
-  const consulate = country === 'USA' ? 'US consulate' : `${country} consulate`;
+function buildSteps(country: string, simplifiedCentreVisit?: boolean): TimelineStepData[] {
+  const consulate = country === 'USA' ? 'US consulate' : `${country}'s consulate`;
   return [
     {
       title: 'Start & submit your application',
@@ -62,10 +64,15 @@ function buildSteps(country: string): TimelineStepData[] {
       title: 'Expert review and appointment booking',
       desc: 'Your designated visa expert reviews your application and books your appointments at the visa centre.',
     },
-    {
-      title: `Visit visa application centre followed by another appointment at the ${consulate}`,
-      desc: `Visit the visa centre to submit biometrics with our guidance and support. Once biometrics are done, visit the ${consulate} on your visa interview day for your final interview.`,
-    },
+    simplifiedCentreVisit
+      ? {
+          title: 'Visit visa application centre',
+          desc: 'Visit the visa centre to submit biometrics with our guidance and support.',
+        }
+      : {
+          title: `Visit visa application centre followed by another appointment at the ${consulate}`,
+          desc: `Visit the visa centre to submit biometrics with our guidance and support. Once biometrics are done, visit the ${consulate} on your visa interview day for your final interview.`,
+        },
     {
       title: 'Visa delivered on time',
       desc: 'Relax as we ensure your visa is processed promptly and delivered on time.',
@@ -88,6 +95,63 @@ const USA_DOCUMENTS: DocumentItem[] = [
   { label: 'Salary Slips', icon: <Receipt size={17} />, desc: 'Last 3 months salary slips from your employer.' },
   { label: 'Sponsor Bank Statement', icon: <Landmark size={17} />, desc: "Sponsor's bank statement if they are funding your trip." },
   { label: 'DS-160 Form', icon: <ClipboardList size={17} />, desc: 'Confirmation page of your completed DS-160 online application.' },
+];
+
+const CANADA_DOCUMENTS: DocumentItem[] = [
+  { label: 'Bank Statement', icon: <Landmark size={17} />, desc: 'Last 6 months bank statement showing financial stability.' },
+  { label: 'Passport Front Page', icon: <BookOpen size={17} />, desc: 'Clear scan of the data page of your valid passport.' },
+  { label: 'ITR', icon: <FileBadge size={17} />, desc: 'Income Tax Returns for the last 2–3 financial years.' },
+  { label: 'Company Registration Proof', icon: <Building2 size={17} />, desc: 'Proof of business registration, required if you are self-employed.' },
+  { label: 'Sponsor Cover Letter', icon: <Mail size={17} />, desc: 'Cover letter from your sponsor explaining the purpose of sponsorship.' },
+  { label: 'Flight Bookings', icon: <Plane size={17} />, desc: 'Confirmed round-trip flight reservation (not necessarily paid).' },
+  { label: 'Hotel Confirmation', icon: <Building2 size={17} />, desc: 'Hotel booking or accommodation confirmation for the stay.' },
+  { label: 'Aadhar Card', icon: <CreditCard size={17} />, desc: 'Copy of your Aadhar Card as identity proof.' },
+  { label: 'Visa Entry Exit Stamp', icon: <Stamp size={17} />, desc: 'Copies of stamps from previous international travel.' },
+  { label: 'Marriage certificate', icon: <Heart size={17} />, desc: "Marriage certificate, if applicable, to support your family status." },
+  { label: 'Death Certificate', icon: <FileX size={17} />, desc: "Death certificate of a spouse, where relevant to your application." },
+  { label: 'Employer NOC/ Leave Approval Letter', icon: <FileCheck2 size={17} />, desc: 'No-objection or approved leave letter issued by your employer.' },
+  { label: 'Cover letter', icon: <FileText size={17} />, desc: 'Personal letter explaining the purpose and itinerary of your visit.' },
+  { label: 'Divorce Certificate', icon: <FileMinus size={17} />, desc: 'Divorce certificate, if applicable, to support your family status.' },
+  { label: 'Invitation Letter', icon: <Mail size={17} />, desc: 'Invitation letter if visiting friends, family, or business contacts.' },
+  { label: 'Other Country Visa', icon: <Globe size={17} />, desc: 'Copies of valid visas for other countries, if you hold any.' },
+  { label: 'Passport Back Page', icon: <BookOpen size={17} />, desc: 'Scan of the back page of your passport.' },
+  { label: 'Passport Size Photograph', icon: <ImageIcon size={17} />, desc: 'Recent passport-size photograph as per embassy specifications.' },
+  { label: 'Salary Slips', icon: <Receipt size={17} />, desc: 'Last 3 months salary slips from your employer.' },
+  { label: 'Rejection Letter', icon: <XCircle size={17} />, desc: 'Copy of any previous visa rejection letter, if applicable.' },
+  { label: 'Travel Itinerary', icon: <Route size={17} />, desc: 'Planned day-by-day itinerary for your trip.' },
+  { label: 'Sponsor Bank Statement', icon: <Landmark size={17} />, desc: "Sponsor's bank statement if they are funding your trip." },
+  { label: 'Student NOC', icon: <GraduationCap size={17} />, desc: 'No-objection certificate from your institution, if you are a student.' },
+];
+
+const UK_DOCUMENTS: DocumentItem[] = [
+  { label: 'Bank Statement', icon: <Landmark size={17} />, desc: 'Last 6 months bank statement showing financial stability.' },
+  { label: 'Passport Front Page', icon: <BookOpen size={17} />, desc: 'Clear scan of the data page of your valid passport.' },
+  { label: 'Leave Approval Letter', icon: <FileCheck2 size={17} />, desc: 'Letter from employer approving your leave of absence.' },
+  { label: 'ITR', icon: <FileBadge size={17} />, desc: 'Income Tax Returns for the last 2–3 financial years.' },
+  { label: 'Company Registration Proof', icon: <Building2 size={17} />, desc: 'Proof of business registration, required if you are self-employed.' },
+  { label: 'Sponsor Cover Letter', icon: <Mail size={17} />, desc: 'Cover letter from your sponsor explaining the purpose of sponsorship.' },
+  { label: 'Visa Application Form', icon: <ClipboardList size={17} />, desc: 'Completed and signed visa application form.' },
+  { label: 'Appointment Confirmation', icon: <CalendarClock size={17} />, desc: 'Confirmation of your booked visa centre appointment.' },
+  { label: 'Flight Bookings', icon: <Plane size={17} />, desc: 'Confirmed round-trip flight reservation (not necessarily paid).' },
+  { label: 'Hotel Confirmation', icon: <Building2 size={17} />, desc: 'Hotel booking or accommodation confirmation for the stay.' },
+  { label: 'Aadhar Card', icon: <CreditCard size={17} />, desc: 'Copy of your Aadhar Card as identity proof.' },
+  { label: 'Visa Entry Exit Stamp', icon: <Stamp size={17} />, desc: 'Copies of stamps from previous international travel.' },
+  { label: 'Marriage certificate', icon: <Heart size={17} />, desc: 'Marriage certificate, if applicable, to support your family status.' },
+  { label: 'Company Bank Statement', icon: <Landmark size={17} />, desc: "Your company's bank statement, if self-employed." },
+  { label: 'Birth Certificate', icon: <ScrollText size={17} />, desc: 'Birth certificate for identity and age verification, where required.' },
+  { label: 'Cover letter', icon: <FileText size={17} />, desc: 'Personal letter explaining the purpose and itinerary of your visit.' },
+  { label: 'Invitation Letter', icon: <Mail size={17} />, desc: 'Invitation letter if visiting friends, family, or business contacts.' },
+  { label: 'No Objection Certificate', icon: <FileCheck2 size={17} />, desc: 'No-objection certificate from your employer or institution.' },
+  { label: 'Passport Back Page', icon: <BookOpen size={17} />, desc: 'Scan of the back page of your passport.' },
+  { label: 'Passport Size Photograph', icon: <ImageIcon size={17} />, desc: 'Recent passport-size photograph as per embassy specifications.' },
+  { label: 'Salary Slips', icon: <Receipt size={17} />, desc: 'Last 3 months salary slips from your employer.' },
+  { label: 'Travel Insurance', icon: <ShieldCheck size={17} />, desc: 'Travel insurance policy with minimum ₹5 lakh coverage.' },
+  { label: 'Proof Of Investment', icon: <TrendingUp size={17} />, desc: 'Proof of investments such as mutual funds, stocks, or fixed deposits.' },
+  { label: 'Student ID Proof', icon: <GraduationCap size={17} />, desc: 'Valid student ID card, if you are currently enrolled in education.' },
+  { label: 'Residence Proof', icon: <Home size={17} />, desc: 'Utility bill or rental agreement confirming your current address.' },
+  { label: 'Sponsor Passport', icon: <BookOpen size={17} />, desc: "Copy of your sponsor's passport, if they are funding your trip." },
+  { label: 'Sponsor IT Return', icon: <FileBadge size={17} />, desc: "Sponsor's Income Tax Returns for the last 2–3 financial years." },
+  { label: 'Sponsor Bank Statement', icon: <Landmark size={17} />, desc: "Sponsor's bank statement if they are funding your trip." },
 ];
 
 const DEFAULT_DOCUMENTS: DocumentItem[] = [
@@ -136,6 +200,7 @@ interface CountryData {
   plans: VisaPlan[];
   documents: DocumentItem[];
   specificFaqs: { q: string; a: string }[];
+  simplifiedCentreVisit?: boolean;
 }
 
 const visaData: Record<string, CountryData> = {
@@ -168,10 +233,10 @@ const visaData: Record<string, CountryData> = {
       { img: 'https://images.unsplash.com/photo-1493699441810-e84bf38df96f?w=700&auto=format&fit=crop', cap: 'Toronto' },
     ],
     plans: [
-      { name: 'Visitor Visa', type: 'Sticker', stay: '180 Days', validity: '10 Years', days: 20, price: 12000, fees: 4499, cat: 'sticker' },
-      { name: 'Electronic Travel Authorization (eTA)', type: 'e-visa', stay: '180 Days', validity: '5 Years', days: 5, price: 5000, fees: 1999, cat: 'e-visa' },
+      { name: 'Tourist Visa Multiple Entry', type: 'sticker', stay: '180 Days', validity: '10 Years', days: 60, price: 12999, fees: 4999, cat: 'sticker' },
     ],
-    documents: DEFAULT_DOCUMENTS,
+    documents: CANADA_DOCUMENTS,
+    simplifiedCentreVisit: true,
     specificFaqs: [
       { q: 'What is a Canada eTA?', a: 'An eTA is an electronic travel authorization for visa-exempt foreign nationals traveling to Canada by air.' },
       { q: 'Can I extend my Canada visitor visa?', a: 'Yes, you can apply for an extension from within Canada before your authorized stay expires.' },
@@ -187,10 +252,10 @@ const visaData: Record<string, CountryData> = {
       { img: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=700&auto=format&fit=crop', cap: 'Oxford' },
     ],
     plans: [
-      { name: 'Standard Visitor Visa', type: 'Sticker', stay: '180 Days', validity: '6 Months', days: 21, price: 12400, fees: 4499, cat: 'sticker' },
-      { name: 'Long-Term Visitor Visa', type: 'Sticker', stay: '180 Days', validity: '2–10 Years', days: 15, price: 24800, fees: 6999, cat: 'sticker' },
+      { name: 'Tourist Visa Single/Multiple Entry', type: 'sticker', stay: '180 Days', validity: '6 Months', days: 35, price: 18199, fees: 4999, cat: 'sticker' },
     ],
-    documents: DEFAULT_DOCUMENTS,
+    documents: UK_DOCUMENTS,
+    simplifiedCentreVisit: true,
     specificFaqs: [
       { q: 'Can I apply for a UK 10-year visa directly?', a: 'Yes, if you can demonstrate a frequent and sustained need to visit the UK.' },
       { q: 'Is there a fast-track service for UK visa?', a: 'Yes, Priority (5 days) and Super Priority (24h) services are available at an extra cost.' },
@@ -283,7 +348,7 @@ export default function CountryVisa() {
   const arriveStr = addDays(procDays);
   const allFaqs   = [...(data.specificFaqs ?? []), ...baseFaqs];
   const shownFaqs = allFaqsOn ? allFaqs : allFaqs.slice(0, 8);
-  const steps     = buildSteps(data.country);
+  const steps     = buildSteps(data.country, data.simplifiedCentreVisit);
 
   const goToApplication = (planName?: string) => {
     const q = new URLSearchParams({ country: data.country });
