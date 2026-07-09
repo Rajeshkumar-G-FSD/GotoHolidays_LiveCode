@@ -15,6 +15,7 @@ import LoadingOverlay from '../components/visa/LoadingOverlay';
 import type { VisaPlan } from '../components/visa/VisaPlanCard';
 import type { TimelineStepData } from '../components/visa/TimelineStep';
 import type { DocumentItem } from '../components/visa/DocumentCard';
+import type { AddOnItem } from '../components/visa/AddOnCard';
 
 // ─── helpers ───────────────────────────────────────────────────────────────
 function formatDate(d: Date) {
@@ -191,6 +192,14 @@ const allReviews = [
   { name: 'Priya Desai',    rating: 5, text: 'Very professional team. I got my visa without any stress.', init: 'P' },
 ];
 
+const VISA_TRANSFER_ADDON: AddOnItem = {
+  name: 'Visa Transfer',
+  processingTime: '2 working days',
+  validityNote: '30 days post issue',
+  price: 1180,
+  recommended: true,
+};
+
 // ─── per-country data ───────────────────────────────────────────────────────
 interface CountryData {
   country: string;
@@ -201,6 +210,8 @@ interface CountryData {
   documents: DocumentItem[];
   specificFaqs: { q: string; a: string }[];
   simplifiedCentreVisit?: boolean;
+  useRadioSelector?: boolean;
+  addOns?: AddOnItem[];
 }
 
 const visaData: Record<string, CountryData> = {
@@ -271,10 +282,13 @@ const visaData: Record<string, CountryData> = {
       { img: 'https://images.unsplash.com/photo-1508050919630-b135583b29ab?w=700&auto=format&fit=crop', cap: 'Amsterdam' },
     ],
     plans: [
-      { name: 'Tourist Visa (Type C)', type: 'Sticker', stay: '90 Days', validity: '90 Days in 180 Days', days: 25, price: 7200, fees: 2999, cat: 'sticker' },
-      { name: 'Business Visa (Type C)', type: 'Sticker', stay: '90 Days', validity: '90 Days in 180 Days', days: 25, price: 7200, fees: 2999, cat: 'sticker' },
+      { name: 'Appointment & Document Assistance (Easy Apply)', type: 'Assistance', stay: '90 Days', validity: '180 days post issue', days: 10, price: 4280, fees: 1000, cat: 'sticker', breakdown: { visaFee: 0, vfsFee: 3100, serviceFee: 1000, gstPercent: 18 } },
+      { name: 'Appointment & Document Assistance', type: 'Assistance', stay: '90 Days', validity: 'Decided by embassy', days: 20, price: 4870, fees: 1500, cat: 'sticker', breakdown: { visaFee: 0, vfsFee: 3100, serviceFee: 1500, gstPercent: 18 } },
+      { name: 'Meet & Assist', type: 'Assistance', stay: '90 Days', validity: 'Decided by embassy', days: 15, price: 6050, fees: 2500, cat: 'sticker', breakdown: { visaFee: 0, vfsFee: 3100, serviceFee: 2500, gstPercent: 18 } },
     ],
     documents: DEFAULT_DOCUMENTS,
+    useRadioSelector: true,
+    addOns: [VISA_TRANSFER_ADDON],
     specificFaqs: [
       { q: 'Which country should I apply to for Schengen visa?', a: 'Apply to the country of your primary destination or where you stay the longest.' },
       { q: 'Do I need an interview for Schengen visa?', a: 'Biometrics are required, but a formal interview is usually only for specific cases.' },
@@ -309,10 +323,12 @@ const visaData: Record<string, CountryData> = {
       { img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&auto=format&fit=crop', cap: 'Adventure Capital' },
     ],
     plans: [
-      { name: 'Visitor Visa', type: 'Sticker', stay: '180 Days', validity: '3 Years', days: 30, price: 9500, fees: 3999, cat: 'sticker' },
-      { name: 'eVisa', type: 'e-visa', stay: '180 Days', validity: '2 Years', days: 7, price: 3000, fees: 1499, cat: 'e-visa' },
+      { name: 'Visitor Visa', type: 'Sticker', stay: '180 Days', validity: '3 Years', days: 30, price: 9916, fees: 1200, cat: 'sticker', breakdown: { visaFee: 8500, dependentFee: 2000, serviceFee: 1200, gstPercent: 18 } },
+      { name: 'eVisa', type: 'e-visa', stay: '180 Days', validity: '2 Years', days: 7, price: 3326, fees: 700, cat: 'e-visa', breakdown: { visaFee: 2500, dependentFee: 1200, serviceFee: 700, gstPercent: 18 } },
     ],
     documents: DEFAULT_DOCUMENTS,
+    useRadioSelector: true,
+    addOns: [VISA_TRANSFER_ADDON],
     specificFaqs: [
       { q: 'Do I need a visitor visa for New Zealand?', a: 'Indian citizens require a visitor visa for New Zealand tourism or business visits.' },
       { q: 'What is the New Zealand eVisa?', a: 'The eVisa is an electronic visa that allows you to enter New Zealand. It is the faster alternative to the traditional sticker visa.' },
@@ -350,9 +366,10 @@ export default function CountryVisa() {
   const shownFaqs = allFaqsOn ? allFaqs : allFaqs.slice(0, 8);
   const steps     = buildSteps(data.country, data.simplifiedCentreVisit);
 
-  const goToApplication = (planName?: string) => {
+  const goToApplication = (planName?: string, addOnNames?: string[]) => {
     const q = new URLSearchParams({ country: data.country });
     if (planName) q.set('plan', planName);
+    if (addOnNames?.length) q.set('addons', addOnNames.join(','));
     navigate(`/visa-application?${q.toString()}`);
   };
 
@@ -436,8 +453,10 @@ export default function CountryVisa() {
             documents={data.documents}
             startDate={todayStr}
             arriveDate={arriveStr}
-            onStartApplication={(planName) => goToApplication(planName)}
+            onStartApplication={(planName, addOnNames) => goToApplication(planName, addOnNames)}
             onViewDetails={(planName) => goToApplication(planName)}
+            useRadioSelector={data.useRadioSelector}
+            addOns={data.addOns}
           />
 
           {/* ══ GALLERY ═══════════════════════════════════════════════════ */}

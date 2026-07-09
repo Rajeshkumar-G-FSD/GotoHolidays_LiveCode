@@ -1,6 +1,9 @@
 import { forwardRef, useState, type ReactNode } from 'react';
+import { motion } from 'motion/react';
 import SectionHeading from './SectionHeading';
 import VisaPlanCard, { type VisaPlan } from './VisaPlanCard';
+import RadioPlanCard from './RadioPlanCard';
+import AddOnCard, { type AddOnItem } from './AddOnCard';
 import VisaTimeline from './VisaTimeline';
 import type { TimelineStepData } from './TimelineStep';
 import DocumentGrid from './DocumentGrid';
@@ -14,17 +17,25 @@ interface USAVisaSectionProps {
   documents: DocumentItem[];
   startDate: string;
   arriveDate: string;
-  onStartApplication: (planName?: string) => void;
+  onStartApplication: (planName?: string, addOnNames?: string[]) => void;
   onViewDetails: (planName: string) => void;
+  useRadioSelector?: boolean;
+  addOns?: AddOnItem[];
 }
 
 const USAVisaSection = forwardRef<HTMLDivElement, USAVisaSectionProps>(function USAVisaSection(
-  { country, plans, steps, stepIcons, documents, startDate, arriveDate, onStartApplication, onViewDetails },
+  { country, plans, steps, stepIcons, documents, startDate, arriveDate, onStartApplication, onViewDetails, useRadioSelector, addOns },
   ref
 ) {
   const cats = ['all', ...Array.from(new Set(plans.map(p => p.cat)))];
   const [filter, setFilter] = useState('all');
   const shownPlans = filter === 'all' ? plans : plans.filter(p => p.cat === filter);
+  const [selectedPlanName, setSelectedPlanName] = useState<string | null>(null);
+  const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
+  const activePlanName = selectedPlanName ?? shownPlans[0]?.name;
+  const activePlan = shownPlans.find(p => p.name === activePlanName);
+  const addOnsTotal = (addOns ?? []).filter(a => selectedAddOns.has(a.name)).reduce((sum, a) => sum + a.price, 0);
+  const total = (activePlan?.price ?? 0) + addOnsTotal;
 
   return (
     <div ref={ref}>
@@ -49,17 +60,66 @@ const USAVisaSection = forwardRef<HTMLDivElement, USAVisaSectionProps>(function 
           ))}
         </div>
 
-        <div className="max-w-2xl mx-auto space-y-5">
-          {shownPlans.map((plan, i) => (
-            <VisaPlanCard
-              key={plan.name}
-              plan={plan}
-              index={i}
-              onStart={() => onStartApplication(plan.name)}
-              onViewDetails={() => onViewDetails(plan.name)}
-            />
-          ))}
-        </div>
+        {useRadioSelector ? (
+          <div className="max-w-2xl mx-auto space-y-5">
+            {shownPlans.map((plan, i) => (
+              <RadioPlanCard
+                key={plan.name}
+                plan={plan}
+                index={i}
+                selected={plan.name === activePlanName}
+                onSelect={() => setSelectedPlanName(plan.name)}
+              />
+            ))}
+            {addOns?.map((addOn, i) => (
+              <motion.div
+                key={addOn.name}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: (shownPlans.length + i) * 0.1, duration: 0.5, ease: 'easeOut' }}
+              >
+                <AddOnCard
+                  addOn={addOn}
+                  selected={selectedAddOns.has(addOn.name)}
+                  onToggle={() => setSelectedAddOns(prev => {
+                    const next = new Set(prev);
+                    if (next.has(addOn.name)) next.delete(addOn.name); else next.add(addOn.name);
+                    return next;
+                  })}
+                />
+              </motion.div>
+            ))}
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gray-50 rounded-3xl p-6 border border-gray-100">
+              <div>
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-wide">Total Amount</p>
+                <p className="text-2xl font-black text-gray-900">₹{total.toLocaleString('en-IN')}</p>
+              </div>
+              <motion.button
+                onClick={() => onStartApplication(activePlanName ?? undefined, Array.from(selectedAddOns))}
+                whileHover={{ scale: 1.04, boxShadow: '0 10px 30px rgba(153,0,17,0.45)' }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full sm:w-auto text-white font-bold text-sm px-10 py-3.5 rounded-full transition-colors duration-300"
+                style={{ background: '#990011' }}
+              >
+                Start Application
+              </motion.button>
+            </div>
+          </div>
+        ) : (
+          <div className="max-w-2xl mx-auto space-y-5">
+            {shownPlans.map((plan, i) => (
+              <VisaPlanCard
+                key={plan.name}
+                plan={plan}
+                index={i}
+                onStart={() => onStartApplication(plan.name)}
+                onViewDetails={() => onViewDetails(plan.name)}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-8 space-y-2">
           <p className="text-gray-400 text-sm">📌 More Options: Business Visa, Group Travel, Long-Term Stay</p>

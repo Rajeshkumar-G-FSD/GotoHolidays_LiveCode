@@ -1,6 +1,14 @@
 import { motion } from 'motion/react';
 import AnimatedCounter from './AnimatedCounter';
 
+export interface VisaPlanBreakdown {
+  visaFee: number;
+  vfsFee?: number;
+  dependentFee?: number;
+  serviceFee: number;
+  gstPercent: number;
+}
+
 export interface VisaPlan {
   name: string;
   type: string;
@@ -10,6 +18,7 @@ export interface VisaPlan {
   price: number;
   fees: number;
   cat: string;
+  breakdown?: VisaPlanBreakdown;
 }
 
 const rowIcons: Record<string, string> = {
