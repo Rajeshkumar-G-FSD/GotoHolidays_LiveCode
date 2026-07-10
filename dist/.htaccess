@@ -1,4 +1,8 @@
 # Goto Holidays - SPA rewrite rules for Apache/cPanel hosting
+
+# Block directory listing (no placeholder index.html files needed)
+Options -Indexes
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
