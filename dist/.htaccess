@@ -7,6 +7,10 @@ Options -Indexes
   RewriteEngine On
   RewriteBase /
 
+  # Force non-www to www (canonical domain)
+  RewriteCond %{HTTP_HOST} ^gotoholidays-visa\.co\.in [NC]
+  RewriteRule ^(.*)$ https://www.gotoholidays-visa.co.in/$1 [L,R=301]
+
   # Serve existing files/directories directly
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
